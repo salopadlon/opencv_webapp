@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from .forms import UploadImageForm
+from .forms import ImageUploadForm
+from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
 
@@ -23,3 +25,19 @@ def uimage(request):
         form = UploadImageForm()
         return render(request, 'opencv_webapp/uimage.html',
                       {'form': form})
+
+
+def dface(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+
+            imageURL = settings.MEDIA_URL + form.instance.document.name
+            # opencv_dface(settings.MEDIA_ROOT_URL + imageURL)
+
+            return render(request, 'opencv_webapp/dface.html', {'form': form, 'post': post})
+    else:
+        form = ImageUploadForm()
+    return render(request, 'opencv_webapp/dface.html', {'form': form})
