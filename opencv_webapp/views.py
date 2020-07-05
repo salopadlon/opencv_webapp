@@ -11,7 +11,7 @@ def first_view(request):
 
 def uimage(request):
     if request.method == 'POST':
-        form = UploadImageForm(request.POST.request.FILES)
+        form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
             myfile = request.FILES['image']
             fs = FileSystemStorage()
